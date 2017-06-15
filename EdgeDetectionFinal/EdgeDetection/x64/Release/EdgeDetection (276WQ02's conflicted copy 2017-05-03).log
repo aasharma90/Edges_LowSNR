@@ -1,0 +1,13 @@
+﻿  demo.cpp
+demo.cpp(66): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+demo.cpp(123): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+demo.cpp(184): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+demo.cpp(43): warning C4996: '_sleep': This function or variable has been superceded by newer library or operating system functionality. Consider using Sleep instead. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt\stdlib.h(1266): note: see declaration of '_sleep'
+  Generating code
+  1 of 1112 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  EdgeDetection.vcxproj -> C:\Users\E0021530\Dropbox\NightTime_MINDEF_Project\NightTime_Stereo_Vision_Project\Edges_LowSNR\EdgeDetectionFinal\x64\Release\EdgeDetection.exe
+  EdgeDetection.vcxproj -> C:\Users\E0021530\Dropbox\NightTime_MINDEF_Project\NightTime_Stereo_Vision_Project\Edges_LowSNR\EdgeDetectionFinal\x64\Release\EdgeDetection.pdb (Full PDB)

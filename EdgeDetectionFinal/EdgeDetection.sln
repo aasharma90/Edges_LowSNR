@@ -1,0 +1,68 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EdgeDetection", "EdgeDetection\EdgeDetection.vcxproj", "{121ACB11-937C-405E-BE13-79ACDC332F63}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4929B3CC-5F57-4899-8314-BFA73D975ED2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StructureTexture_ROF", "StructureTexture_ROF\StructureTexture_ROF.vcxproj", "{938C7CB9-71C6-4888-A5B5-72D6355CC532}"
+	ProjectSection(ProjectDependencies) = postProject
+		{121ACB11-937C-405E-BE13-79ACDC332F63} = {121ACB11-937C-405E-BE13-79ACDC332F63}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		mex|ARM = mex|ARM
+		mex|Win32 = mex|Win32
+		mex|x64 = mex|x64
+		Release|ARM = Release|ARM
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.Debug|ARM.ActiveCfg = Debug|ARM
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.Debug|ARM.Build.0 = Debug|ARM
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.Debug|Win32.ActiveCfg = Debug|Win32
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.Debug|Win32.Build.0 = Debug|Win32
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.Debug|x64.ActiveCfg = Debug|x64
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.Debug|x64.Build.0 = Debug|x64
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.mex|ARM.ActiveCfg = mex|ARM
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.mex|ARM.Build.0 = mex|ARM
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.mex|Win32.ActiveCfg = mex|Win32
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.mex|Win32.Build.0 = mex|Win32
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.mex|x64.ActiveCfg = mex|x64
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.mex|x64.Build.0 = mex|x64
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.Release|ARM.ActiveCfg = Release|x64
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.Release|ARM.Build.0 = Release|x64
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.Release|Win32.ActiveCfg = Release|Win32
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.Release|Win32.Build.0 = Release|Win32
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.Release|x64.ActiveCfg = Release|x64
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.Release|x64.Build.0 = Release|x64
+		{121ACB11-937C-405E-BE13-79ACDC332F63}.Release|x64.Deploy.0 = Release|x64
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.Debug|ARM.ActiveCfg = Debug|Win32
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.Debug|Win32.ActiveCfg = Debug|Win32
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.Debug|Win32.Build.0 = Debug|Win32
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.Debug|x64.ActiveCfg = Debug|x64
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.Debug|x64.Build.0 = Debug|x64
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.mex|ARM.ActiveCfg = Release|x64
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.mex|ARM.Build.0 = Release|x64
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.mex|Win32.ActiveCfg = Release|Win32
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.mex|Win32.Build.0 = Release|Win32
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.mex|x64.ActiveCfg = Release|x64
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.mex|x64.Build.0 = Release|x64
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.Release|ARM.ActiveCfg = Release|Win32
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.Release|Win32.ActiveCfg = Release|Win32
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.Release|Win32.Build.0 = Release|Win32
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.Release|x64.ActiveCfg = Release|x64
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.Release|x64.Build.0 = Release|x64
+		{938C7CB9-71C6-4888-A5B5-72D6355CC532}.Release|x64.Deploy.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

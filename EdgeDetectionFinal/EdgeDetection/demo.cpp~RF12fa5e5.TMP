@@ -1,0 +1,292 @@
+#include <iostream>
+#include <string>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include "tools.h"
+#include "Detector.h"
+#include <thread>
+#include <stdio.h>
+#include <direct.h>
+//#include "mex.h"
+
+using namespace std;
+using namespace cv;
+
+void myRunIm(const Mat& I, Mat& E, MyParam& prm);
+void mySplit(const Mat& I, Mat& Out, char split_type, int part_no, int parts);
+void myMerge(const Mat& I, Mat& E_split, Mat& E_merged, char split_type, int part_no, int parts);
+void myWrapper(const Mat& I, Mat& E, const MyParam& prm, const Range& ry, const Range& rx);
+
+int main( int argc, char** argv )
+{
+
+	//Noisy Image Demo
+	Mat I;
+	MyParam prm;
+	cout << "Noisy Image Demo:" << endl;	
+	I = readImage("Simulations/myCurves2.png");
+	I.convertTo(I, TYPE);
+	I = I / 255;
+	cout << "Image size of " << I.rows << " x " << I.cols  << endl;	
+	// Show the noisy image
+	showImage(I, 1, 4, false);
+
+	// Generate Edge Map
+	Mat E;
+	prm.slidingWindow = 0;
+	prm.noisyImage = true;
+	prm.parallel = true;
+	prm.splitPoints = 0;
+	// First Iteration, all Image
+	myRunIm(I, E, prm);
+	E = 1 - E;
+	// Show the edge map
+	showImage(E, 2, 4,false);
+
+	// Check affect of splitting 
+	Mat E_merged = Mat(I.rows, I.cols, TYPE, ZERO);;
+	int parts_array[] = {2, 3, 5, 7, 9};
+	int part_no, parts;
+	char split_type = 'v';
+	for (int parts_c = 0; parts_c < 5; parts_c++)
+	{
+		parts = parts_array[parts_c];
+		for (int i = 1;i <= parts;i++)
+		{
+			Mat I_split, E_split;
+			part_no = i;
+			mySplit(I, I_split, split_type, part_no, parts);
+			myRunIm(I_split, E_split, prm);
+			E_split = 1 - E_split;
+			cout << "Output Split Image size of " << E_split.rows << " x " << E_split.cols << endl;
+			//showImage(E_split, i, 4, false);
+			myMerge(I, E_split, E_merged, split_type, part_no, parts);
+			//showImage(I_merged, i+parts, 4, false);
+		}
+		// Show the edge map
+		showImage(E_merged, 3+parts_c, 4, false);
+	}
+	
+
+	////Real Image Demo
+	//cout << "Real Image Demo:" << endl;
+	//I = readImage("real/night1_left_LIME.png");
+	//I.convertTo(I, TYPE);
+	//I = I / 255;
+	//// Show the noisy image
+	//showImage(I, 3, 1, false);
+	//prm.slidingWindow = 129;
+	//prm.noisyImage = true;
+	//prm.parallel = true;
+	//prm.splitPoints = 0;
+	//// First Iteration, all Image
+	//myRunIm(I, E, prm);
+	//E = 1 - E;
+	//showImage(E, 4, 1, true);
+
+	println("Finished");
+	return 0;
+}
+
+void myRunIm(const Mat& I, Mat& E, MyParam& prm){
+	if (!prm.slidingWindow){
+		E = Mat(I.rows, I.cols, TYPE, ZERO);
+		myWrapper(I, E, prm, Range::all(), Range::all());
+	}
+	else{
+		prm.parallel = true;
+		prm.printToScreen = false;
+		int s = min(I.cols, I.rows);
+		double j = log2(s);
+		j = j == floor(j) ? floor(j) - 1 : floor(j);
+		s = (int)pow(2,j) + 1;
+		s = min(s, (int)prm.slidingWindow);
+		E = Mat(I.rows, I.cols, TYPE, ZERO);
+		int ds = (s - 1) / 2;
+		Range rx, ry;
+		double start = tic();
+		int ITER = 0;
+		cout << (I.cols/ds+1)*(I.rows/ds+1) << " ITERATIONS" << endl;
+		cout << s << " BLOCK" << endl;
+		vector<thread> tasks;
+		bool parallel = false; 
+		for (int x = 0; x < I.cols; x += ds){
+			for (int y = 0; y < I.rows; y += ds){
+				rx = x + s >= I.cols ? Range(I.cols - s, I.cols) : Range(x, x + s);
+				ry = y + s >= I.rows ? Range(I.rows - s, I.rows) : Range(y, y + s);
+				cout << "ITER " << ++ITER << endl;
+				//cout << rx.end << endl;
+				//cout << ry.end << endl;
+				Mat curI = I(ry, rx);
+				//cout << curI.rows << ',' << curI.cols << endl;
+				if (parallel){
+					tasks.push_back(thread(myWrapper, curI, E, prm, ry, rx));
+				}
+				else{
+					myWrapper(curI, E, prm, ry, rx);
+				}
+			}
+		}
+		if (parallel){
+			for (uint i = 0; i < tasks.size(); ++i)
+				tasks[i].join();
+		}
+		toc(start);
+	}
+	E = E / maxValue(E);
+}
+
+std::mutex E_mutex;
+
+void myWrapper(const Mat& I, Mat& E, const MyParam& prm, const Range& ry, const Range& rx){
+	Detector d(I, prm);
+	Mat curE = d.runIm();
+	E_mutex.lock();
+	E(ry, rx) = max(E(ry, rx), curE);
+	E_mutex.unlock();
+}
+
+void mySplit(const Mat& I, Mat& Out, char split_type, int part_no, int parts)
+{
+	int i;
+    double new_rows, new_cols;
+	i = part_no;
+	Range rx, ry;
+	switch (split_type)
+	{
+	case 'h': new_rows = I.rows / parts;
+		new_rows = new_rows == floor(new_rows) ? new_rows : floor(new_rows);
+		new_cols = double(I.cols);
+		break;
+	case 'v': new_cols = I.cols / parts;
+		new_cols = new_cols == floor(new_cols) ? new_cols : floor(new_cols);
+		new_rows = double(I.rows);
+		break;
+	}
+	switch (split_type)
+	{
+	case 'h':
+		if (i == parts)
+		{
+			// Compensate for any missed row in the last split
+			ry = Range((i - 1)*new_rows, I.rows-1);
+		}
+		else
+		{
+			ry = Range((i - 1)*new_rows, i*new_rows-1);
+		}
+		rx = Range(0, new_cols-1);
+		break;
+	case 'v':
+		if (i == parts)
+		{
+			// Compensate for any missed col in the last split
+			rx = Range((i - 1)*new_cols, I.cols-1);
+		}
+		else
+		{
+			rx = Range((i - 1)*new_cols, i*new_cols-1);
+		}
+		ry = Range(0, new_rows-1);
+		break;
+	}
+	cout << i << ", " << rx.end << ", " << ry.end << endl;
+	Out = I(ry, rx);
+}
+
+void myMerge(const Mat& I, Mat& E_split, Mat& E_merged, char split_type, int part_no, int parts)
+{
+	int i;
+	double new_rows, new_cols, original_rows, original_cols;
+	i = part_no;
+	original_rows = double(I.rows);
+	original_cols = double(I.cols);
+	Range rx, ry;
+	switch (split_type)
+	{
+	case 'h':
+		new_rows = E_split.rows;
+		new_cols = original_cols;
+		break;
+	case 'v':
+		new_cols = E_split.cols;
+		new_rows = original_rows;
+		break;
+	}
+	switch (split_type)
+	{
+	case 'h':
+		if (i == parts)
+		{
+			// Compensate for any missed row in the last split
+			ry = Range((i - 1)*new_rows, I.rows-1);
+		}
+		else
+		{
+			ry = Range((i - 1)*new_rows, i*new_rows-1);
+		}
+		rx = Range(0, new_cols-1);
+		break;
+	case 'v':
+		if (i == parts)
+		{
+			// Compensate for any missed col in the last split
+			rx = Range((i - 1)*new_cols, I.cols-1);
+		}
+		else
+		{
+			rx = Range((i - 1)*new_cols, i*new_cols-1);
+		}
+		ry = Range(0, new_rows-1);
+		break;
+	}
+	cout << E_split.rows << ", " << E_split.cols << endl;
+	cout << E_merged.rows << ", " << E_merged.cols << endl;
+	cout << "myMerge - Part : " << i << ", rx : (" << rx.start <<  ", " << rx.end << "), ry : (" << ry.start << ", " << ry.end << ")" << endl;
+	E_split.copyTo(E_merged(ry,rx));
+	//showImage(E_split, 100, 4, false);
+	//showImage(E_merged, 101, 4, true);
+}
+
+/*
+void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
+{
+	mexPrintf("Run Edge Detection\n");
+	if (nrhs != 6) {
+		mexErrMsgIdAndTxt("MATLAB:mexcpp:nargin", "MEXCPP requires six input arguments.");
+	}
+	else if (nlhs != 1) {
+		mexErrMsgIdAndTxt("MATLAB:mexcpp:nargout", "MEXCPP requires one output argument.");
+	}
+
+	if (!mxIsDouble(prhs[0])) {
+		mexErrMsgIdAndTxt("MyToolbox:arrayProduct:notDouble", "Input Matrix must be a double.");
+	}
+
+	for (int i = 1; i < 6; ++i){
+		if (!mxIsDouble(prhs[i]) || mxGetNumberOfElements(prhs[i]) != 1) {
+			mexErrMsgIdAndTxt("MyToolbox:arrayProduct:notScalar", "Input multiplier must be a scalar.");
+		}
+	}
+
+	MyParam prm;
+	double* img1 = (double *)mxGetPr(prhs[0]);
+	int cols = (int)mxGetN(prhs[0]);
+	int rows = (int)mxGetM(prhs[0]);
+	mexPrintf(format("Image Size: %d, %d\n", rows,cols).c_str());
+	prm.removeEpsilon = mxGetScalar(prhs[1]);
+	prm.maxTurn = mxGetScalar(prhs[2]);
+	prm.nmsFact = mxGetScalar(prhs[3]);
+	prm.splitPoints = (int)mxGetScalar(prhs[4]);
+	prm.minContrast = (int)mxGetScalar(prhs[5]);
+
+	mexPrintf(format("Params: %2.2f, %2.2f, %2.2f, %d, %d\n", prm.removeEpsilon, prm.maxTurn, prm.nmsFact, prm.splitPoints, prm.minContrast).c_str());
+	Mat I(rows, cols, TYPE);
+	memcpy(I.data, img1, I.rows * I.cols * sizeof(double));
+	Detector d(I, prm);
+	Mat E = d.runIm();
+	plhs[0] = mxCreateDoubleMatrix(E.rows, E.cols, mxREAL);
+	memcpy(mxGetPr(plhs[0]), E.data, E.rows * E.cols * sizeof(double));
+}
+*/

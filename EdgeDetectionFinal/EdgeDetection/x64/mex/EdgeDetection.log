@@ -1,0 +1,15 @@
+﻿Build started 3/10/2015 1:08:33 PM.
+     1>Project "C:\Users\yehonato\Dropbox\Phd\Research\EdgeDetection\CppEdgeDetection\EdgeDetection\EdgeDetection\EdgeDetection.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\yehonato\Dropbox\Phd\Research\EdgeDetection\CppEdgeDetection\EdgeDetection\x64\mex\EdgeDetection.mexw64" /NOLOGO /LIBPATH:C:\opencv\build\x64\vc12\lib /LIBPATH:C:\boost\boost\lib\x64\ /LIBPATH:"C:\Program Files\MATLAB\R2014a\extern\lib\win64\microsoft" opencv_imgproc2410.lib opencv_core2410.lib opencv_highgui2410.lib opencv_ml2410.lib opencv_video2410.lib opencv_features2d2410.lib opencv_calib3d2410.lib opencv_objdetect2410.lib opencv_contrib2410.lib opencv_legacy2410.lib opencv_flann2410.lib libmx.lib libmex.lib libmat.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\yehonato\Dropbox\Phd\Research\EdgeDetection\CppEdgeDetection\EdgeDetection\x64\mex\EdgeDetection.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\yehonato\Dropbox\Phd\Research\EdgeDetection\CppEdgeDetection\EdgeDetection\x64\mex\EdgeDetection.lib" /MACHINE:X64 /export:mexFunction /dll /DLL x64\mex\demo.obj
+         x64\mex\Detector.obj
+         x64\mex\tools.obj
+            Creating library C:\Users\yehonato\Dropbox\Phd\Research\EdgeDetection\CppEdgeDetection\EdgeDetection\x64\mex\EdgeDetection.lib and object C:\Users\yehonato\Dropbox\Phd\Research\EdgeDetection\CppEdgeDetection\EdgeDetection\x64\mex\EdgeDetection.exp
+         Generating code
+         Finished generating code
+         EdgeDetection.vcxproj -> C:\Users\yehonato\Dropbox\Phd\Research\EdgeDetection\CppEdgeDetection\EdgeDetection\x64\mex\EdgeDetection.mexw64
+     1>Done Building Project "C:\Users\yehonato\Dropbox\Phd\Research\EdgeDetection\CppEdgeDetection\EdgeDetection\EdgeDetection\EdgeDetection.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.29
